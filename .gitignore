@@ -1,0 +1,17 @@
+# Ignore virtual environment
+env/
+RationApp/env/
+FaceRecognition/env/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore database files
+*.db
+
+# Ignore system files
+.DS_Store
+Thumbs.db
