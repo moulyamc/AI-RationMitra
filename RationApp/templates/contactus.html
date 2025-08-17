@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us | Ration Mitraa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(145deg, #0b132b, #1c2541, #3a506b);
+      font-family: 'Inter', sans-serif;
+      color: white;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 1.5rem;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 2.5rem;
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.1), 0 0 80px rgba(0, 255, 255, 0.07);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .glass-card:hover {
+      box-shadow: 0 0 50px rgba(0, 255, 255, 0.2), 0 0 120px rgba(0, 255, 255, 0.1);
+    }
+
+    .glow-input {
+      background-color: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 1rem;
+      border-radius: 0.75rem;
+      color: white;
+      outline: none;
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    .glow-input:focus {
+      border: 1px solid #00f7ff;
+      box-shadow: 0 0 10px #00f7ff;
+    }
+
+    .glow-button {
+      background: linear-gradient(to right, #00f7ff, #007bff);
+      border: none;
+      color: white;
+      padding: 1rem 2rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+      border-radius: 9999px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px #00f7ff;
+    }
+
+    .glow-button:hover {
+      background: linear-gradient(to right, #00fff7, #00aaff);
+      box-shadow: 0 0 25px #00eaff, 0 0 50px #00f7ff;
+      transform: scale(1.05);
+    }
+
+    .divider {
+      height: 2px;
+      background: linear-gradient(to right, transparent, #00f7ff, transparent);
+      margin: 2rem 0;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 md:p-12">
+
+  <div class="w-full max-w-5xl glass-card">
+
+    <h1 class="text-4xl font-extrabold text-center mb-6 tracking-wide text-cyan-400 animate-pulse">
+      📞 Contact Ration Mitraa
+    </h1>
+
+    <p class="text-center text-lg text-gray-300 mb-8">
+      Got something to say? We're listening. Drop your thoughts below and our team will connect with you shortly.
+    </p>
+
+    <div class="divider"></div>
+
+    <form action="/contactus" method="POST" class="space-y-6">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block mb-2 text-sm font-semibold text-white">Full Name</label>
+          <input type="text" name="name" placeholder="John Doe" class="glow-input w-full" required />
+        </div>
+
+        <div>
+          <label class="block mb-2 text-sm font-semibold text-white">Email</label>
+          <input type="email" name="email" placeholder="john@example.com" class="glow-input w-full" required />
+        </div>
+      </div>
+
+      <div>
+        <label class="block mb-2 text-sm font-semibold text-white">Subject</label>
+        <input type="text" name="subject" placeholder="Subject of your message" class="glow-input w-full" required />
+      </div>
+
+      <div>
+        <label class="block mb-2 text-sm font-semibold text-white">Your Message</label>
+        <textarea name="message" rows="6" placeholder="Type your message here..." class="glow-input w-full resize-none" required></textarea>
+      </div>
+
+      <div class="flex justify-center">
+        <button type="submit" class="glow-button">
+          ✉️ Send Message
+        </button>
+      </div>
+
+    </form>
+
+    <div class="divider"></div>
+
+    <p class="text-center text-sm text-gray-400">
+      © 2025 AI-RationMitra. All rights reserved | Made with ❤️ in Bharat.
+    </p>
+
+  </div>
+</body>
+</html>

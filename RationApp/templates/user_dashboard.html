@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Dashboard | AI-RationMitra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #00a8ff;
+      --bg-light: linear-gradient(135deg, #ecf0f3, #ffffff);
+      --bg-dark: #1e1e2f;
+      --text-light: #2f3640;
+      --text-dark: #f1f2f6;
+      --card-light: rgba(255, 255, 255, 0.65);
+      --card-dark: rgba(255, 255, 255, 0.07);
+      --highlight-dark: linear-gradient(135deg, #0097e6, #00a8ff);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      overflow-x: hidden;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    body.dark-mode {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    header {
+      background: linear-gradient(120deg, #0052D4, #65C7F7, #9CECFB);
+      padding: 60px 20px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 8px 35px rgba(0, 0, 0, 0.15);
+      border-bottom-left-radius: 50px;
+      border-bottom-right-radius: 50px;
+      animation: slideDown 0.7s ease-in-out;
+      position: relative;
+    }
+
+    @keyframes slideDown {
+      0% { transform: translateY(-50px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    header h1 {
+      font-size: 40px;
+      margin: 0;
+    }
+
+    .quote {
+      font-size: 18px;
+      margin-top: 12px;
+      font-style: italic;
+      color: #e3e3e3;
+    }
+
+    .toggle-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(6px);
+      border: none;
+      padding: 10px 18px;
+      border-radius: 25px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .intro {
+      text-align: center;
+      margin: 40px auto;
+      max-width: 900px;
+      font-size: 17px;
+      line-height: 1.8;
+      padding: 25px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.06);
+      border: 1px solid #dcdde1;
+      color: #444;
+    }
+
+    .content {
+      padding: 60px 8% 50px;
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .services-heading {
+      text-align: center;
+      font-size: 30px;
+      margin-bottom: 50px;
+      color: #192a56;
+      position: relative;
+    }
+
+    .services-heading::after {
+      content: "";
+      width: 70px;
+      height: 5px;
+      background: #00a8ff;
+      display: block;
+      margin: 14px auto 0;
+      border-radius: 2px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 35px;
+    }
+
+    .service-box {
+      background: var(--card-light);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 22px;
+      padding: 45px 30px;
+      text-align: center;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .service-box:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 25px 40px rgba(0, 0, 0, 0.12);
+      border-color: #00a8ff;
+    }
+
+    .highlighted {
+      background: var(--highlight-dark);
+      color: white;
+      font-weight: bold;
+      transform: scale(1.03);
+      box-shadow: 0 25px 35px rgba(0, 168, 255, 0.35);
+    }
+
+    .highlighted:hover {
+      background: linear-gradient(135deg, #0097e6, #00a8ff);
+    }
+
+    .service-box h3 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .service-box p {
+      font-size: 15px;
+      color: #555;
+    }
+
+    .highlighted p {
+      color: #e4f0fb;
+    }
+
+    footer {
+      text-align: center;
+      padding: 35px 20px;
+      font-size: 15px;
+      color: #7f8c8d;
+      background: #f1f2f6;
+      border-top: 1px solid #dcdde1;
+      margin-top: 60px;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    body.dark-mode .intro {
+      background: var(--card-dark);
+      color: #dcdde1;
+      border-color: #3b3b4f;
+    }
+
+    body.dark-mode .services-heading {
+      color: #ffffff;
+    }
+
+    body.dark-mode .highlighted p {
+      color: #e0f7ff;
+    }
+
+    body.dark-mode .service-box p {
+      color: #cccccc;
+    }
+
+    body.dark-mode .service-box h3 {
+      color: #ffffff;
+    }
+
+    body.dark-mode footer {
+      background: #2f2f3d;
+      color: #aaa;
+      border-color: #444;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome, {{ user_name }} 👋</h1>
+    <p class="quote">"Empowering Bharat with Smart Rationing Solutions!"</p>
+    <button class="toggle-btn" onclick="toggleMode()">🌗 Toggle Mode</button>
+
+    <select id="languageSelector" onchange="changeLanguage()" style="position:absolute; top:20px; left:30px; padding:8px; border-radius:8px;">
+      <option value="en">🌐 English</option>
+      <option value="kn">🇮🇳 ಕನ್ನಡ</option>
+      <option value="hi">🇮🇳 हिंदी</option>
+    </select>
+    
+  </header>
+
+  <div class="intro">
+    <strong>AI-RationMitra</strong> is India’s pioneering initiative aimed at revolutionizing the Public Distribution System (PDS) using intelligent automation and digital assistance.
+    Designed with the vision to uplift rural access, reduce leakage, and ensure equitable distribution of essential commodities, this platform brings together AI-driven guidance, real-time stock monitoring, and citizen-first services — all in one place.
+  </div>
+
+  <div class="content">
+    <h2 class="services-heading">✨ Services Provided by Us</h2>
+
+    <div class="services-grid">
+      <a href="/chatbot">
+        <div class="service-box highlighted">
+          <h3>🤖 Ask RationMitra (AI Chatbot)</h3>
+          <p>Intelligent, voice-aware help for all your ration needs</p>
+        </div>
+      </a>
+
+      <a href="/commodity-access">
+        <div class="service-box">
+          <h3>🛒 Commodity Access</h3>
+          <p>View your quotas and place voice-based ration orders</p>
+        </div>
+      </a>
+      
+
+      <a href="/updates">
+        <div class="service-box">
+          <h3>📍 Smart Ration FPS Explorer</h3>
+          <p>View live shops, prices, maps & filter insights</p>
+        </div>
+      </a>
+      
+      <a href="/schemes">
+        <div class="service-box">
+          <h3>🏛️ Govt Schemes</h3>
+          <p>Explore real-time welfare schemes for ration & subsidies</p>
+        </div>
+      </a>
+      
+
+      <a href="/about-us">
+        <div class="service-box">
+          <h3>🏢 About Us</h3>
+          <p>Meet the visionaries behind the innovation</p>
+        </div>
+      </a>
+      <a href="/contactus">
+        <div class="service-box">
+          <h3>📞 Contact Us</h3>
+          <p>Connect with us for support or suggestions</p>
+        </div>
+      </a>
+      
+      <a href="/feedback">
+        <div class="service-box">
+          <h3>📝 Feedback</h3>
+          <p>Your feedback shapes future upgrades!</p>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2024 <strong>AI-RationMitra</strong>. All rights reserved.
+  </footer>
+
+  <script>
+    function toggleMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    <script>
+      const translations = {
+        en: {
+          welcome: "Welcome,",
+          quote: '"Empowering Bharat with Smart Rationing Solutions!"',
+          services: "✨ Services Provided by Us",
+          chatbot: "🤖 Ask RationMitra (AI Chatbot)",
+          chatbot_desc: "Intelligent, voice-aware help for all your ration needs",
+          access: "🛒 Commodity Access",
+          access_desc: "View your quotas and place voice-based ration orders",
+          fps: "📍 Smart Ration FPS Explorer",
+          fps_desc: "View live shops, prices, maps & filter insights",
+          schemes: "🏛️ Govt Schemes",
+          schemes_desc: "Explore real-time welfare schemes for ration & subsidies",
+          about: "🏢 About Us",
+          about_desc: "Meet the visionaries behind the innovation",
+          contact: "📞 Contact Us",
+          contact_desc: "Connect with us for support or suggestions",
+          feedback: "📝 Feedback",
+          feedback_desc: "Your feedback shapes future upgrades!",
+        },
+        kn: {
+          welcome: "ಸ್ವಾಗತ,",
+          quote: '"ಭಾರತದ ಹಿತಕ್ಕಾಗಿ ಸ್ಮಾರ್ಟ್ ರೇಶನ್ ಪರಿಹಾರ!"',
+          services: "✨ ನಾವು ಒದಗಿಸುವ ಸೇವೆಗಳು",
+          chatbot: "🤖 ರೇಷನ್ ಮಿತ್ರಾ (ಎಐ ಚಾಟ್‌ಬಾಟ್)",
+          chatbot_desc: "ನಿಮ್ಮ ರೇಷನ್ ಅಗತ್ಯಗಳಿಗಾಗಿ ಬುದ್ಧಿವಂತ आवाज್ ಸಹಾಯ",
+          access: "🛒 ವಸ್ತು ಪ್ರವೇಶ",
+          access_desc: "ನಿಮ್ಮ ಹಕ್ಕುಗಳನ್ನು ವೀಕ್ಷಿಸಿ ಮತ್ತು ಧ್ವನಿ ಆಧಾರಿತ ಆದೇಶಗಳನ್ನು ನೀಡಿ",
+          fps: "📍 ಸ್ಮಾರ್ಟ್ ರೇಶನ್ FPS ಎಕ್ಸ್‌ಪ್ಲೋರರ್",
+          fps_desc: "ಜೀವಂತ ಅಂಗಡಿಗಳು, ದರಗಳು, ನಕ್ಷೆಗಳು ಮತ್ತು ಫಿಲ್ಟರ್‌ಗಳನ್ನು ವೀಕ್ಷಿಸಿ",
+          schemes: "🏛️ ಸರ್ಕಾರಿ ಯೋಜನೆಗಳು",
+          schemes_desc: "ರೇಷನ್ ಮತ್ತು ಸಬ್ಸಿಡಿಗಾಗಿ ನೈಜ ಸಮಯದ ಯೋಜನೆಗಳನ್ನು ಅನ್ವೇಷಿಸಿ",
+          about: "🏢 ನಮ್ಮ ಬಗ್ಗೆ",
+          about_desc: "ಆವಿಷ್ಕಾರದ ಹಿಂದೆ ಇರುವ ದೃಷ್ಟಿಕೋನದವರನ್ನು ಭೇಟಿಮಾಡಿ",
+          contact: "📞 ಸಂಪರ್ಕಿಸಿ",
+          contact_desc: "ಬೆಂಬಲ ಅಥವಾ ಸಲಹೆಗಾಗಿ ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ",
+          feedback: "📝 ಪ್ರತಿಕ್ರಿಯೆ",
+          feedback_desc: "ನಿಮ್ಮ ಪ್ರತಿಕ್ರಿಯೆ ಭವಿಷ್ಯದ ನವೀಕರಣಗಳನ್ನು ರೂಪಿಸುತ್ತದೆ!",
+        },
+        hi: {
+          welcome: "स्वागत है,",
+          quote: '"भारत को स्मार्ट राशन समाधान से सशक्त बनाना!"',
+          services: "✨ हमारी सेवाएँ",
+          chatbot: "🤖 रेशन मित्रा (एआई चैटबॉट)",
+          chatbot_desc: "आपकी राशन ज़रूरतों के लिए बुद्धिमान, वॉयस-अवेयर सहायता",
+          access: "🛒 वस्तु पहुँच",
+          access_desc: "अपने कोटे देखें और वॉयस से ऑर्डर करें",
+          fps: "📍 स्मार्ट रेशन FPS एक्सप्लोरर",
+          fps_desc: "लाइव दुकानें, मूल्य, नक्शे और फ़िल्टर जानकारी देखें",
+          schemes: "🏛️ सरकारी योजनाएँ",
+          schemes_desc: "राशन और सब्सिडी के लिए योजनाएँ देखें",
+          about: "🏢 हमारे बारे में",
+          about_desc: "नवाचार के पीछे के विचारकों से मिलें",
+          contact: "📞 संपर्क करें",
+          contact_desc: "सहायता या सुझावों के लिए हमसे जुड़ें",
+          feedback: "📝 फीडबैक",
+          feedback_desc: "आपकी राय भविष्य को आकार देती है!",
+        },
+      };
+    
+      function changeLanguage() {
+        const lang = document.getElementById("languageSelector").value;
+        localStorage.setItem("lang", lang);
+        applyTranslations(lang);
+      }
+    
+      function applyTranslations(lang) {
+        const t = translations[lang];
+        document.querySelector("header h1").innerHTML = `${t.welcome} {{ user_name }} 👋`;
+        document.querySelector(".quote").textContent = t.quote;
+        document.querySelector(".services-heading").textContent = t.services;
+    
+        const services = document.querySelectorAll(".service-box");
+        services[0].querySelector("h3").textContent = t.chatbot;
+        services[0].querySelector("p").textContent = t.chatbot_desc;
+        services[1].querySelector("h3").textContent = t.access;
+        services[1].querySelector("p").textContent = t.access_desc;
+        services[2].querySelector("h3").textContent = t.fps;
+        services[2].querySelector("p").textContent = t.fps_desc;
+        services[3].querySelector("h3").textContent = t.schemes;
+        services[3].querySelector("p").textContent = t.schemes_desc;
+        services[4].querySelector("h3").textContent = t.about;
+        services[4].querySelector("p").textContent = t.about_desc;
+        services[5].querySelector("h3").textContent = t.contact;
+        services[5].querySelector("p").textContent = t.contact_desc;
+        services[6].querySelector("h3").textContent = t.feedback;
+        services[6].querySelector("p").textContent = t.feedback_desc;
+      }
+    
+      // Load last selected language on page load
+      document.addEventListener("DOMContentLoaded", () => {
+        const storedLang = localStorage.getItem("lang") || "en";
+        document.getElementById("languageSelector").value = storedLang;
+        applyTranslations(storedLang);
+      });
+    </script>
+    
+  </script>
+</body>
+</html>

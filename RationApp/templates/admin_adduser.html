@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add User</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Global Reset and Font */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #f0f8ff);
+      color: #333;
+      padding: 30px 10px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease-in-out;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 48px;
+      color: white;
+      background: linear-gradient(135deg, #3498db, #2c3e50);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      margin-bottom: 40px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      transition: all 0.2s ease-in-out;
+    }
+
+    label {
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: block;
+      color: #444;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"] {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      transition: 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 12px rgba(52, 152, 219, 0.4);
+    }
+
+    input[type="submit"] {
+      background: linear-gradient(to right, #3498db, #2980b9);
+      color: white;
+      padding: 15px;
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      font-weight: bold;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    input[type="submit"]:hover {
+      background: linear-gradient(to right, #2980b9, #1f618d);
+      transform: scale(1.03);
+    }
+
+    .messages {
+      margin-bottom: 20px;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    .success-message {
+      color: #2ecc71;
+      font-weight: bold;
+    }
+
+    .error-message {
+      color: #e74c3c;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 40px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+      font-size: 15px;
+    }
+
+    th {
+      background-color: #3498db;
+      color: white;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover {
+      background-color: #f1faff;
+      transform: scale(1.01);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    h3 {
+      margin-top: 60px;
+      font-size: 26px;
+      color: #2c3e50;
+    }
+
+    @media screen and (max-width: 768px) {
+      .container {
+        padding: 25px;
+      }
+
+      h2 {
+        font-size: 32px;
+      }
+
+      input[type="submit"] {
+        font-size: 16px;
+      }
+
+      th, td {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>ADD NEW USER</h2>
+
+    {% if success_message %}
+    <div class="messages">
+      <p class="success-message">{{ success_message }}</p>
+    </div>
+    {% endif %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="messages">
+          <ul>
+            {% for category, message in messages %}
+              <li class="error-message">{{ message }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required/>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required/>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required/>
+      </div>
+
+      <div class="form-group">
+        <label for="age">Age</label>
+        <input type="number" id="age" name="age" required/>
+      </div>
+
+      <div class="form-group">
+        <label for="aadhar">Aadhar ID</label>
+        <input type="text" id="aadhar" name="aadhar" required/>
+      </div>
+
+      <div class="form-group">
+        <label for="mobile">Mobile Number</label>
+        <input type="text" id="mobile" name="mobile" required/>
+      </div>
+
+      <input type="submit" value="Add User"/>
+    </form>
+
+    <h3>Existing Users</h3>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Age</th>
+        <th>Aadhar ID</th>
+        <th>Mobile</th>
+      </tr>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.age }}</td>
+        <td>{{ user.aadhar }}</td>
+        <td>{{ user.mobile }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</body>
+</html>

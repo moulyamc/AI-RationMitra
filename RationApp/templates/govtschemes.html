@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Govt Schemes | AI-RationMitra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #f3f9ff, #ddefff);
+      margin: 0;
+      padding: 0;
+      color: #2c3e50;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px;
+      background: linear-gradient(to right, #2b5876, #4e4376);
+      color: white;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 42px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .controls, .export-buttons {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .controls input, .controls select, .export-buttons button {
+      padding: 10px 14px;
+      margin: 8px;
+      font-size: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    .controls input:focus, .controls select:focus {
+      border-color: #007ae1;
+      box-shadow: 0 0 5px rgba(0, 122, 225, 0.5);
+    }
+
+    .export-buttons button {
+      background: #0058a3;
+      color: white;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    }
+
+    .export-buttons button:hover {
+      background: #007ae1;
+      transform: translateY(-2px);
+    }
+
+    #map {
+      height: 400px;
+      margin: 40px auto;
+      width: 90%;
+      border-radius: 12px;
+    }
+
+    .container {
+      padding: 30px 5%;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .scheme-card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      margin-bottom: 25px;
+      transition: all 0.3s ease;
+      border-left: 6px solid #00a8ff;
+      position: relative;
+    }
+
+    .scheme-card:hover {
+      transform: scale(1.01);
+      box-shadow: 0 16px 35px rgba(0,0,0,0.12);
+    }
+
+    .badge {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .Urban { background: #00b894; color: white; }
+    .Rural { background: #d63031; color: white; }
+    .Semi-Urban { background: #fdcb6e; color: #2d3436; }
+
+    .scheme-card h3 {
+      margin: 0 0 10px;
+      color: #0058a3;
+    }
+
+    .scheme-card p {
+      margin: 4px 0;
+      color: #444;
+      font-size: 15px;
+    }
+
+    .loading {
+      text-align: center;
+      font-size: 20px;
+      margin-top: 60px;
+      color: #888;
+    }
+
+    footer {
+      background: #2b5876;
+      color: #eee;
+      text-align: center;
+      padding: 20px 10px;
+      margin-top: 40px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📢 Live Ration Shops & Government Scheme Updates</h1>
+  </header>
+
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="🔍 Search FPS by name..." />
+    <select id="stateFilter"><option value="">Filter by State</option></select>
+    <select id="districtFilter"><option value="">Filter by District</option></select>
+  </div>
+
+  <div class="export-buttons">
+    <button onclick="exportToPDF()">📄 Export to PDF</button>
+    <button onclick="exportToExcel()">📊 Export to Excel</button>
+  </div>
+
+  <div id="map"></div>
+
+  <div class="container" id="scheme-container">
+    <div class="loading">Fetching latest schemes from server...</div>
+  </div>
+
+  <footer>
+    &copy; 2025 <strong>AI-RationMitra</strong>. All rights reserved | Made with ❤️ in Bharat.
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    let allSchemes = [];
+    let map;
+    let markers = [];
+
+    async function fetchData() {
+      const res = await fetch('/api/govtschemes');
+      allSchemes = await res.json();
+      populateFilters();
+      renderSchemes();
+      renderMap();
+    }
+
+    function populateFilters() {
+      const states = new Set(allSchemes.map(s => s.statename));
+      const stateSelect = document.getElementById('stateFilter');
+      states.forEach(state => {
+        const opt = document.createElement('option');
+        opt.value = state;
+        opt.textContent = state;
+        stateSelect.appendChild(opt);
+      });
+      stateSelect.addEventListener('change', filterSchemes);
+      document.getElementById('districtFilter').addEventListener('change', filterSchemes);
+      document.getElementById('searchInput').addEventListener('input', filterSchemes);
+    }
+
+    function filterSchemes() {
+      const state = document.getElementById('stateFilter').value;
+      const district = document.getElementById('districtFilter').value;
+      const query = document.getElementById('searchInput').value.toLowerCase();
+
+      let filtered = allSchemes.filter(scheme =>
+        (!state || scheme.statename === state) &&
+        (!district || scheme.districtname === district) &&
+        (!query || scheme.fps_name.toLowerCase().includes(query))
+      );
+
+      const districts = new Set(allSchemes.filter(s => s.statename === state).map(s => s.districtname));
+      const districtSelect = document.getElementById('districtFilter');
+      districtSelect.innerHTML = '<option value="">Filter by District</option>';
+      districts.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        districtSelect.appendChild(opt);
+      });
+
+      renderSchemes(filtered);
+      renderMap(filtered);
+    }
+
+    function renderSchemes(data = allSchemes) {
+      const container = document.getElementById('scheme-container');
+      container.innerHTML = '';
+      if (!data.length) {
+        container.innerHTML = '<p class="loading">No FPS found.</p>';
+        return;
+      }
+      data.forEach(s => {
+        const div = document.createElement('div');
+        div.classList.add('scheme-card');
+        div.innerHTML = `
+          <span class="badge ${s.category}">${s.category}</span>
+          <h3>${s.fps_name} - ${s.districtname}, ${s.statename}</h3>
+          <p><strong>FPS ID:</strong> ${s.fps_id}</p>
+          <p><strong>Location:</strong> Lat: ${s.lattitude}, Long: ${s.lagnitude}</p>
+          <p><strong>Remark:</strong> ${s.remark}</p>
+          <p><strong>Ration Items:</strong> ${s.ration_available?.join(', ')}</p>
+          <p><strong>Prices (₹/kg):</strong> ${Object.entries(s.price_per_kg || {}).map(([k,v]) => `${k}: ₹${v}`).join(', ')}</p>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderMap(data = allSchemes) {
+      if (!map) {
+        map = L.map('map').setView([12.2958, 76.6394], 8);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      }
+      markers.forEach(m => m.remove());
+      markers = [];
+      data.forEach(s => {
+        if (s.lattitude && s.lagnitude) {
+          const marker = L.marker([s.lattitude, s.lagnitude], {
+            icon: L.icon({
+              iconUrl: 'https://cdn-icons-png.flaticon.com/512/854/854878.png',
+              iconSize: [30, 30],
+              iconAnchor: [15, 30]
+            })
+          }).addTo(map).bindPopup(`<strong>${s.fps_name}</strong><br>${s.districtname}, ${s.statename}`);
+          markers.push(marker);
+        }
+      });
+    }
+
+    function exportToExcel() {
+      const ws = XLSX.utils.json_to_sheet(allSchemes);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'GovtSchemes');
+      XLSX.writeFile(wb, 'GovtSchemes.xlsx');
+    }
+
+    async function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.text('Govt Schemes - Ration Shops', 10, 10);
+      allSchemes.slice(0, 25).forEach((scheme, idx) => {
+        doc.text(`${idx + 1}. ${scheme.fps_name} (${scheme.districtname}, ${scheme.statename})`, 10, 20 + idx * 8);
+      });
+      doc.save('GovtSchemes.pdf');
+    }
+
+    window.onload = fetchData;
+  </script>
+</body>
+</html>

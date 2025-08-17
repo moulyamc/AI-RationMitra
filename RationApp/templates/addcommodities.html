@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Commodities</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      padding: 40px;
+      background: linear-gradient(135deg, #f5f6fa, #dff9fb);
+      color: #2f3640;
+      animation: fadeIn 0.6s ease;
+    }
+
+    h2 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #273c75;
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    th, td {
+      padding: 16px 24px;
+      text-align: left;
+      border-bottom: 1px solid #ecf0f1;
+      font-size: 1rem;
+    }
+
+    th {
+      background-color: #00a8ff;
+      color: white;
+      font-weight: 600;
+    }
+
+    input[type="number"] {
+      width: 90px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+
+    input[type="number"]:focus {
+      border-color: #00a8ff;
+      outline: none;
+      box-shadow: 0 0 8px rgba(0, 168, 255, 0.5);
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    button {
+      display: block;
+      margin: 50px auto 0;
+      padding: 14px 36px;
+      background: #00a8ff;
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 14px rgba(0, 168, 255, 0.3);
+    }
+
+    button:hover {
+      background: #40739e;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 22px rgba(0, 168, 255, 0.35);
+    }
+
+    .chart-container {
+      margin-top: 60px;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.07);
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    .chart-container h3 {
+      text-align: center;
+      color: #273c75;
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    canvas {
+      max-width: 100%;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📦 Existing Commodities</h2>
+
+  <table id="commodityTable">
+    <thead>
+      <tr>
+        <th>Commodity</th>
+        <th>Quantity (kg)</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="chart-container">
+    <h3>📊 Live Stock Chart</h3>
+    <canvas id="commodityChart" height="100"></canvas>
+  </div>
+
+  <a href="/newcommodity"><button>➕ Add New Commodity</button></a>
+
+  <script>
+    let data = [];
+    const tableBody = document.querySelector("#commodityTable tbody");
+
+    async function fetchCommodities() {
+      const res = await fetch('/api/get_commodities');
+      data = await res.json();
+      renderTable();
+    }
+
+    function renderTable() {
+      tableBody.innerHTML = "";
+      data.forEach((item, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = ` 
+          <td>${item.name}</td>
+          <td><input type="number" value="${item.quantity}" onchange="updateQuantity(${index}, this.value)"></td>
+        `;
+        tableBody.appendChild(row);
+      });
+      updateChart();
+    }
+
+    async function updateQuantity(index, value) {
+      const quantity = parseInt(value);
+      const res = await fetch('/api/update_quantity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ index: index, quantity: quantity })
+      });
+
+      if (res.ok) {
+        data[index].quantity = quantity;
+        updateChart();
+      } else {
+        alert("❌ Failed to update quantity.");
+      }
+    }
+
+    let chart;
+    function updateChart() {
+      const ctx = document.getElementById("commodityChart").getContext("2d");
+      const labels = data.map(item => item.name);
+      const quantities = data.map(item => item.quantity);
+
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Stock (kg)',
+            data: quantities,
+            backgroundColor: '#00a8ff'
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    fetchCommodities();
+  </script>
+
+</body>
+</html>

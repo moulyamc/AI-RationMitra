@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎙️ AI-RationMitra | Voice-Based Ration Access</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #eef2f3;
+      color: #2f3640;
+    }
+
+    header {
+      background: linear-gradient(135deg, #38ef7d, #11998e);
+      padding: 40px 20px;
+      text-align: center;
+      color: white;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+    }
+
+    header h1 {
+      font-size: 34px;
+      margin: 0;
+    }
+
+    header p {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    th, td {
+      padding: 16px;
+      text-align: center;
+      border-bottom: 1px solid #e1e1e1;
+    }
+
+    th {
+      background-color: #00a8ff;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+
+    .voice-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      padding: 15px 32px;
+      background: #00a8ff;
+      color: white;
+      border: none;
+      border-radius: 40px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 15px rgba(0, 168, 255, 0.4);
+    }
+
+    .voice-btn:hover {
+      background: #007acc;
+    }
+
+    .pulse-ring {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #00a8ff;
+      position: relative;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1.5);
+        opacity: 0;
+      }
+    }
+
+    .message {
+      text-align: center;
+      margin-top: 25px;
+      font-weight: 600;
+      font-size: 18px;
+      padding: 12px 20px;
+      border-radius: 10px;
+    }
+
+    .message.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .message.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 26px;
+      }
+
+      table, th, td {
+        font-size: 14px;
+      }
+
+      .voice-btn {
+        font-size: 16px;
+        padding: 12px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎙️ Voice Ration Access</h1>
+    <p>Speak your requirement – ನಾವು ಕೇಳುತ್ತಿದ್ದೇವೆ! (We are listening!)</p>
+  </header>
+
+  <div class="container">
+    <table id="commodityTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Commodity</th>
+          <th>Monthly Quota</th>
+          <th>Available</th>
+          <th>Access Limit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Fetched data will go here -->
+      </tbody>
+    </table>
+
+    <button class="voice-btn" onclick="startVoiceOrder()">
+      🎤 Speak Order
+    </button>
+
+    <div id="message" class="message"></div>
+
+    <hr style="margin: 30px 0;" />
+
+    <h2 style="text-align:center;">🔍 Check Commodity Balance <br><small>(ನಿಮ್ಮ ಶೇಷ ಶ್ರೇಣಿಯನ್ನು ಪರಿಶೀಲಿಸಿ)</small></h2>
+
+    <div style="text-align:center; margin-top:20px;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+        <input type="text" id="checkInput" placeholder="Enter commodity name (e.g., rice / ಸಕ್ಕರೆ)"
+          style="padding: 12px; font-size: 16px; width: 60%; border-radius: 8px; border: 1px solid #ccc;" />
+        <button class="voice-btn" onclick="checkBalance()">🔎 Check Balance</button>
+      </div>
+    </div>
+    
+
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", refreshTable);
+
+    function refreshTable() {
+      fetch("/fetch_commodities")
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.querySelector("#commodityTable tbody");
+          tbody.innerHTML = "";
+          data.forEach((item, index) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${index + 1}</td>
+              <td>${item.name}</td>
+              <td>${item.monthly_quota}</td>
+              <td id="${item.name}-available">${item.available}</td>
+              <td>${item.access_limit}</td>
+            `;
+            tbody.appendChild(row);
+          });
+        });
+    }
+
+    function startVoiceOrder() {
+      const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      recognition.lang = 'en-IN'; // Set the recognition language to Indian English
+      recognition.start();
+
+      document.getElementById("message").innerText = "🎙️ Listening... Please speak your order (e.g., 2 kg rice / 3 ಲೀಟರ್ ಸಕ್ಕರೆ)";
+
+      recognition.onresult = function(event) {
+        const spokenText = event.results[0][0].transcript.toLowerCase();
+        document.getElementById("message").innerText = `✅ Heard: "${spokenText}"`;
+        processOrder(spokenText);
+      };
+
+      recognition.onerror = function(event) {
+        displayMessage("❌ Voice recognition failed. Try again.", true);
+      };
+    }
+
+    function processOrder(text) {
+      // Improved regex to handle Kannada input and different commodity names
+      const regex = /(\d+)\s*(kg|litre|ltr|l|liter|ltr|ಕಿಲೋ|ಲೀಟರ್|ಕೆಜಿ|liter|ಕೆಜಿ)\s*(rice|dal|wheat|sugar|oil|ತುಪ್ಪ|ಚಾ|ಗೋಧಿ|ಸಕ್ಕರೆ|ಹಿಟ್ಟು)/i;
+      const match = text.match(regex);
+
+      if (!match) {
+        displayMessage("❌ Could not understand. Try saying: '2 kg rice' or '3 ಲೀಟರ್ ಸಕ್ಕರೆ'", true);
+        return;
+      }
+
+      const amount = parseInt(match[1]);
+      const commodity = match[3].toLowerCase();
+
+      fetch('/fetch_commodities')
+        .then(res => res.json())
+        .then(data => {
+          const commodityData = data.find(c => c.name.toLowerCase() === commodity);
+          if (!commodityData) {
+            displayMessage(`❌ Commodity '${commodity}' not found.`, true);
+            return;
+          }
+
+          const available = commodityData.available;
+          const limit = commodityData.access_limit;
+
+          if (amount > available) {
+            displayMessage(`❌ Only ${available}kg of ${commodity} is available.`, true);
+            return;
+          }
+
+          if (amount > limit) {
+            displayMessage(`❌ You can only access up to ${limit}kg of ${commodity}.`, true);
+            return;
+          }
+
+          fetch('/update_commodity', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ commodity: commodity, amount: amount }),
+          })
+          .then(res => res.json())
+          .then(data => {
+            displayMessage(data.message || `✅ ${amount}kg ${commodity} ordered successfully!`, false);
+            refreshTable();
+          });
+        });
+    }
+
+    function displayMessage(text, isError) {
+      const msgDiv = document.getElementById("message");
+      msgDiv.innerText = text;
+      msgDiv.className = isError ? "message error" : "message success";
+    }
+
+    function checkBalance() {
+  const input = document.getElementById("checkInput").value.trim().toLowerCase();
+
+  if (!input) {
+    displayMessage("❌ Please enter a commodity name.", true);
+    return;
+  }
+
+  fetch("/fetch_commodities")
+    .then(res => res.json())
+    .then(data => {
+      const match = data.find(item => 
+        item.name.toLowerCase() === input ||
+        (input.includes("rice") && item.name === "rice") ||
+        (input.includes("dal") && item.name === "dal") ||
+        (input.includes("wheat") && item.name === "wheat") ||
+        (input.includes("sugar") || input.includes("ಸಕ್ಕರೆ")) && item.name === "sugar" ||
+        (input.includes("oil") && item.name === "oil")
+      );
+
+      if (!match) {
+        displayMessage(`❌ Commodity '${input}' not found.`, true);
+        return;
+      }
+
+      const message = `Available ${match.name}: ${match.available} kg/litre`;
+      displayMessage(`✅ ${message}`, false);
+      speakOut(message);
+    });
+}
+
+function speakOut(text) {
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = 'en-IN';
+  window.speechSynthesis.speak(speech);
+}
+
+  </script>
+</body>
+</html>

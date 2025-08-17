@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Ration Centre | Admin - AI-RationMitra</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f3f9ff, #dceefb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
+      margin: 0;
+      animation: fadeIn 1s ease;
+    }
+
+    .form-box {
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+      animation: slideInUp 0.8s ease forwards;
+    }
+
+    .form-box h2 {
+      text-align: center;
+      color: #2b5876;
+      margin-bottom: 30px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .form-box input,
+    .form-box textarea {
+      width: 100%;
+      margin: 12px 0;
+      padding: 14px 16px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      transition: all 0.3s ease;
+      background-color: #f9fcff;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+
+    .form-box input:focus,
+    .form-box textarea:focus {
+      border-color: #007ae1;
+      outline: none;
+      box-shadow: 0 0 8px rgba(0, 122, 225, 0.3);
+    }
+
+    .form-box button {
+      width: 100%;
+      background: linear-gradient(135deg, #2b5876, #4e4376);
+      color: white;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+      box-shadow: 0 6px 16px rgba(46, 91, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .form-box button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(135deg, #4e4376, #2b5876);
+      box-shadow: 0 10px 22px rgba(0, 122, 225, 0.25);
+    }
+
+    .message {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 17px;
+      color: #28a745;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media screen and (max-width: 640px) {
+      .form-box {
+        padding: 30px 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <form class="form-box" action="/submitrationcentre" method="POST">
+    <h2>📝 Add Ration Centre Details</h2>
+
+    <input type="text" name="fps_name" placeholder="FPS Name" required />
+    <input type="text" name="fps_id" placeholder="FPS ID" required />
+    <input type="text" name="statename" placeholder="State" required />
+    <input type="text" name="districtname" placeholder="District" required />
+    <input type="text" name="lattitude" placeholder="Latitude (e.g. 12.2958)" required />
+    <input type="text" name="lagnitude" placeholder="Longitude (e.g. 76.6394)" required />
+    <input type="text" name="category" placeholder="Category (Urban / Rural / Semi-Urban)" required />
+    <textarea name="remark" placeholder="Remarks (optional)"></textarea>
+    <input type="text" name="ration_available" placeholder="Ration Items (e.g. rice, wheat, sugar)" />
+    <input type="text" name="price_per_kg" placeholder="Prices (e.g. rice:30.5, wheat:25, sugar:28)" />
+
+    <button type="submit">➕ Add Ration Centre</button>
+  </form>
+
+  <div class="message">
+    {% if message %}
+      <p>{{ message }}</p>
+    {% endif %}
+  </div>
+</body>
+</html>

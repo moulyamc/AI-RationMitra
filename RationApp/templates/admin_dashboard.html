@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard | AI-RationMitra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    a {
+      text-decoration: none !important;
+    }
+
+    :root {
+      --primary: #00a8ff;
+      --secondary: #6c5ce7;
+      --dark-bg: #1e272e;
+      --light-bg: #f5f6fa;
+      --glass: rgba(255, 255, 255, 0.15);
+      --text-light: #f5f6fa;
+      --text-dark: #2f3640;
+      --highlight: #ffeaa7;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, #eaf6ff, #ffffff);
+      transition: background 0.5s ease;
+      color: var(--text-dark);
+    }
+
+    body.dark-mode {
+      background: var(--dark-bg);
+      color: var(--text-light);
+    }
+
+    header {
+      background: linear-gradient(135deg, #273c75, #40739e);
+      padding: 40px 0;
+      text-align: center;
+      color: white;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 36px;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .toggle-mode {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: var(--glass);
+      border: none;
+      padding: 10px 15px;
+      border-radius: 10px;
+      color: white;
+      backdrop-filter: blur(10px);
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-mode:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .container {
+      padding: 40px 5%;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      transition: 0.3s ease;
+    }
+
+    body.dark-mode .card {
+      background: #2f3640;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+    }
+
+    .action-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+
+    .action-btn:hover {
+      background: var(--secondary);
+    }
+
+    .notification-panel {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--glass);
+      padding: 15px 20px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      color: white;
+      display: none;
+    }
+
+    .chatbot-modal {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      width: 320px;
+      max-height: 400px;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chatbot-modal textarea {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      outline: none;
+      resize: none;
+    }
+
+    .chatbot-header {
+      background: #00a8ff;
+      color: white;
+      padding: 10px 15px;
+      font-weight: bold;
+    }
+
+    a.option {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .more-options {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 25px;
+    }
+
+    .option {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(8px);
+      border-radius: 15px;
+      padding: 20px 5px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      font-weight: 500;
+      font-size: 16px;
+    }
+
+    .option:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .ai-chatbot-button {
+      background: linear-gradient(135deg, #00a8ff, #6c5ce7);
+      color: white;
+      font-weight: bold;
+      border-radius: 18px;
+      padding: 20px;
+      text-align: center;
+      font-size: 18px;
+      cursor: pointer;
+      animation: pulse 2s infinite;
+      transition: all 0.3s ease;
+    }
+
+    .ai-chatbot-button:hover {
+      animation: none;
+      background: #0984e3;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,168,255, 0.7); }
+      70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(0,168,255, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,168,255, 0); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Admin Dashboard - AI RationMitra</h1>
+  <button class="toggle-mode" onclick="toggleMode()">Toggle Dark Mode</button>
+</header>
+
+<div class="container">
+  <div class="grid">
+    <div class="card">
+      <h3>Total Users</h3>
+      <p>{{ total_users }}</p>
+
+      <a href="{{ url_for('admin_adduser') }}">
+        <button class="action-btn">+ Add User</button>
+    </a>
+    </div>
+    <div class="card">
+      <h3>Total Commodities</h3>
+      <p>{{ total_commodities }}</p>
+
+      <a href="/addcommodities" style="text-decoration: none;">
+        <button class="action-btn">+ Add Commodity</button>
+      </a>
+    </div>
+    <div class="card">
+      <h3>Active Requests</h3>
+      <p>32</p>
+    </div>
+  </div>
+
+  <!-- 🔮 Smart Insight Panel -->
+  <div class="card" style="margin-top: 40px; background: linear-gradient(135deg, #dff9fb, #c7ecee); color: #2d3436;">
+    <h3 style="font-size: 22px; margin-bottom: 15px;">🔮 Smart Insights Panel</h3>
+    <ul style="list-style: none; padding-left: 0; font-size: 16px;">
+      <li style="margin-bottom: 10px;">📦 Predicted Ration Shortage: <strong>3 Commodities</strong> in next 7 days</li>
+      <li style="margin-bottom: 10px;">👥 User Surge Expected: <strong>+22%</strong> this week</li>
+      <li style="margin-bottom: 10px;">📍 Most Active Region: <strong>Mysore East Zone</strong></li>
+      <li style="margin-bottom: 10px;">🧠 AI Suggests: <em>"Restock Wheat and Sugar urgently"</em></li>
+    </ul>
+  </div>
+
+  <div class="more-options">
+    <div class="button-grid">
+      <a href="/addrationcentres" class="option">🧾 Generate Reports</a>
+      <a href="/admin/feedback" class="option">📊 View User Feedback</a>
+      <a href="/addcommodities" class="option">📦 Manage Inventory</a>
+      <a href="/notifications" class="option">📨 Notifications Center</a>
+    </div>
+
+    <!-- Centered AI Chatbot Button -->
+    <div style="display: flex; justify-content: center; margin-top: 30px;">
+      <a href = "/chatbot">
+        <div class="ai-chatbot-button" onclick="toggleChatbot()" style="width: 300px;">
+          🧠 AI Assistant Chat
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="chatbot-modal" id="chatbotModal">
+  <div class="chatbot-header">Admin Assistant 🤖</div>
+  <div style="flex: 1; padding: 10px; overflow-y: auto;">
+    <p>Hello Admin! How can I help you today?</p>
+  </div>
+  <textarea rows="2" placeholder="Ask something..."></textarea>
+</div>
+
+<script>
+  function toggleMode() {
+    document.body.classList.toggle('dark-mode');
+  }
+
+  function toggleChatbot() {
+    const modal = document.getElementById('chatbotModal');
+    modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+  }
+
+  setTimeout(() => {
+    const notif = document.getElementById('notifPanel');
+    if (notif) notif.style.display = 'block';
+  }, 3000);
+</script>
+
+</body>
+</html>

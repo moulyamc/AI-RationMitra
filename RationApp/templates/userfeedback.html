@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>📋 User Feedbacks | Ration Mitraa Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom right, #f9fafb, #eef2f7);
+      color: #1f2937;
+    }
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    }
+    .star {
+      color: #fbbf24;
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-gray-800">📋 User Feedbacks</h1>
+      <a href="/admin_dashboard" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-5 py-2 rounded-full transition">⬅️ Back to Dashboard</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-6 py-10">
+    {% if feedbacks %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for fb in feedbacks %}
+        <div class="card bg-white rounded-2xl p-6 shadow-md border border-gray-100">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-lg font-semibold text-indigo-600">{{ fb.username }}</h3>
+            <span class="text-sm text-gray-400">{{ fb.timestamp }}</span>
+          </div>
+          <p class="text-gray-700 text-sm mb-4">{{ fb.message }}</p>
+          <div class="flex items-center gap-1 text-sm">
+            <span class="text-gray-500">Rating:</span>
+            {% for _ in range(fb.rating) %}
+              <span class="star">★</span>
+            {% endfor %}
+            {% for _ in range(5 - fb.rating) %}
+              <span class="text-gray-300">★</span>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center text-gray-500 text-lg font-medium py-20">
+        😕 No feedback has been submitted yet.
+      </div>
+    {% endif %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-6 text-sm text-gray-400">
+    &copy; {{ current_year }} Ration Mitraa. All rights reserved.
+  </footer>
+
+</body>
+</html>

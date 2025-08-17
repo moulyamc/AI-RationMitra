@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | AI-RationMitra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #e1e5ee;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 💠 Deeper Blue Aura Animation Layer */
+    .animated-bg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: radial-gradient(circle at 10% 20%, #a6d0ff, transparent 25%),
+                  radial-gradient(circle at 80% 30%, #78b8ff, transparent 25%),
+                  radial-gradient(circle at 50% 80%, #a4d8ff, transparent 25%);
+      background-size: 200% 200%;
+      animation: moveBlues 30s ease-in-out infinite;
+      opacity: 0.55;
+      filter: blur(50px);
+    }
+
+    @keyframes moveBlues {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+
+    .login-container {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(16px);
+      padding: 40px 50px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      max-width: 400px;
+      width: 90%;
+      transition: all 0.3s ease;
+      animation: fadeIn 0.8s ease-in-out;
+      z-index: 2;
+    }
+
+    .login-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .welcome-text h1 {
+      font-size: 28px;
+      color: #273c75;
+      margin-bottom: 5px;
+    }
+
+    .welcome-text span {
+      color: #00a8ff;
+    }
+
+    .welcome-text p {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .login-form h2 {
+      margin-bottom: 20px;
+      color: #2f3640;
+      font-size: 22px;
+    }
+
+    .login-form input[type="text"],
+    .login-form input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #dcdde1;
+      border-radius: 10px;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.6);
+      transition: all 0.3s ease;
+    }
+
+    .login-form input:focus {
+      border-color: #00a8ff;
+      outline: none;
+      box-shadow: 0 0 8px rgba(0, 168, 255, 0.25);
+    }
+
+    .login-form button {
+      width: 100%;
+      background: linear-gradient(to right, #00a8ff, #0097e6);
+      color: white;
+      font-size: 16px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      margin-top: 15px;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 6px 15px rgba(0, 168, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .login-form button:hover {
+      transform: scale(1.03);
+      background: linear-gradient(to right, #0097e6, #00a8ff);
+      box-shadow: 0 10px 24px rgba(0, 168, 255, 0.4);
+    }
+
+    .extras {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .extras a {
+      color: #0984e3;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .extras a:hover {
+      text-decoration: underline;
+      color: #007acc;
+    }
+
+    .admin-link {
+      display: inline-block;
+      margin-top: 8px;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #777;
+      z-index: 1;
+    }
+
+    footer strong {
+      color: #273c75;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🌊 Blue Aura Background -->
+  <div class="animated-bg"></div>
+
+  <!-- 🔐 Login Box -->
+  <div class="login-container">
+    <div class="welcome-text">
+      <h1>Welcome to <span>AI-RationMitra</span></h1>
+      <p>Simplifying Access, Empowering Bharat</p>
+    </div>
+
+    <form action="/login" method="POST" class="login-form">
+      <h2>LOGIN</h2>
+
+      <input type="text" name="email" placeholder="Email Address" required>
+      <input type="password" name="password" placeholder="Password" required>
+
+      <button type="submit">Login</button>
+
+      <div class="extras">
+        <p>Don’t have an account? <a href="/signup">Signup</a></p>
+        <p><a class="admin-link" href="/admin_login">Login as Admin</a></p>
+      </div>
+    </form>
+  </div>
+
+  <footer>
+    &copy; 2024 <strong>AI-RationMitra</strong>. All rights reserved.
+  </footer>
+
+</body>
+</html>

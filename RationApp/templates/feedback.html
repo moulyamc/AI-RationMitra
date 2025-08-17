@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Feedback | Ration Mitraa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          colors: {
+            primary: '#4f46e5',
+            lightGlass: 'rgba(255, 255, 255, 0.2)',
+            darkGlass: 'rgba(0, 0, 0, 0.4)',
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background: linear-gradient(to right, #1f3491, #7c3eb9);
+      font-family: 'Inter', sans-serif;
+    }
+    .glass {
+      backdrop-filter: blur(14px);
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .star:hover, .star.selected {
+      color: #facc15;
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- Feedback Section -->
+  <main class="flex-grow flex items-center justify-center px-6 py-10">
+    <div class="max-w-2xl w-full glass p-8 rounded-3xl shadow-2xl text-white relative">
+      <h1 class="text-4xl font-extrabold mb-4 text-center">We value your feedback</h1>
+      <p class="text-lg text-center mb-8">Help us improve AI-RationMitra with your honest thoughts.</p>
+
+      <form id="feedbackForm" action="/feedback" method="POST" class="space-y-6">
+        <!-- ⭐ Star Rating -->
+        <div>
+          <label class="block text-sm font-semibold mb-2">Your Experience</label>
+          <div class="flex gap-3 text-3xl cursor-pointer" id="starContainer">
+            <span class="star text-white" data-value="1">★</span>
+            <span class="star text-white" data-value="2">★</span>
+            <span class="star text-white" data-value="3">★</span>
+            <span class="star text-white" data-value="4">★</span>
+            <span class="star text-white" data-value="5">★</span>
+          </div>
+          <input type="hidden" name="rating" id="ratingInput">
+        </div>
+
+        <!-- ✍️ Feedback Message -->
+        <div>
+          <label class="block text-sm font-semibold mb-2">Your Feedback</label>
+          <textarea name="message" rows="4" required
+            class="w-full p-4 rounded-xl bg-white bg-opacity-10 placeholder-gray-200 text-white border border-white border-opacity-20 focus:ring-2 focus:ring-white focus:outline-none"
+            placeholder="Share your thoughts..."></textarea>
+        </div>
+
+        <!-- 👤 Name and Email -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input type="text" name="name" required placeholder="Your Name"
+            class="w-full p-4 rounded-xl bg-white bg-opacity-10 placeholder-gray-200 text-white border border-white border-opacity-20 focus:ring-2 focus:ring-white focus:outline-none" />
+          <input type="email" name="email" required placeholder="Your Email"
+            class="w-full p-4 rounded-xl bg-white bg-opacity-10 placeholder-gray-200 text-white border border-white border-opacity-20 focus:ring-2 focus:ring-white focus:outline-none" />
+        </div>
+
+        <!-- ✅ Submit Button -->
+        <div class="text-center">
+          <button type="submit"
+            class="bg-white text-indigo-700 px-8 py-3 font-semibold rounded-full shadow-xl hover:bg-indigo-100 transition duration-300 ease-in-out">
+            Submit Feedback
+          </button>
+        </div>
+      </form>
+
+      <!-- 🎉 Thank You Modal -->
+      <div id="thankyouModal" class="hidden absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center rounded-3xl">
+        <div class="bg-white text-gray-800 p-8 rounded-2xl text-center max-w-md w-full shadow-xl">
+          <h2 class="text-2xl font-bold mb-4">🎉 Thank You!</h2>
+          <p class="mb-6">Your feedback helps make Ration Mitraa even better.</p>
+          <button onclick="closeModal()"
+            class="px-6 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-transparent text-white text-sm mt-12">
+    <div class="border-t border-white border-opacity-20 pt-10 pb-6 text-center">
+      <div class="flex flex-col md:flex-row items-center justify-between max-w-5xl mx-auto px-6">
+        <!-- Brand Info -->
+        <div class="mb-4 md:mb-0">
+          <h2 class="text-xl font-bold tracking-wide">Ration Mitraa</h2>
+          <p class="text-xs text-white text-opacity-60">© 2025 AI-RationMitra. All rights reserved | Made with ❤️ in Bharat.</p>
+        </div>
+
+        <!-- Social Icons -->
+        <div class="flex space-x-4">
+          <a href="#" class="hover:text-yellow-300 transition duration-300">
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path d="M22,5.75A16.35,16.35,0,0,1,12.25,22,16.35,16.35,0,0,1,2,5.75C2,3.7,3.7,2,5.75,2a5.94,5.94,0,0,1,4.57,2.32A5.94,5.94,0,0,1,15.25,2C17.3,2,19,3.7,19,5.75Z" />
+            </svg>
+          </a>
+          <a href="#" class="hover:text-yellow-300 transition duration-300">
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path d="M22 4.01c-.77.34-1.6.57-2.46.67a4.28 4.28 0 0 0 1.88-2.36 8.6 8.6 0 0 1-2.72 1.03A4.26 4.26 0 0 0 16.1 2a4.26 4.26 0 0 0-4.26 4.26c0 .33.04.65.11.96A12.1 12.1 0 0 1 3.15 3.1a4.26 4.26 0 0 0 1.32 5.68 4.22 4.22 0 0 1-1.93-.54v.05c0 2.04 1.45 3.74 3.37 4.13a4.29 4.29 0 0 1-1.92.07c.54 1.67 2.1 2.88 3.96 2.91a8.56 8.56 0 0 1-5.3 1.83c-.34 0-.67-.02-1-.06a12.08 12.08 0 0 0 6.55 1.92c7.86 0 12.15-6.51 12.15-..." />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS Logic -->
+  <script>
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('ratingInput');
+    const form = document.getElementById('feedbackForm');
+    const modal = document.getElementById('thankyouModal');
+
+    // ⭐ Handle star selection
+    stars.forEach(star => {
+      star.addEventListener('click', () => {
+        const rating = parseInt(star.getAttribute('data-value'));
+        ratingInput.value = rating;
+        stars.forEach(s => {
+          s.classList.remove('selected');
+          if (parseInt(s.getAttribute('data-value')) <= rating) {
+            s.classList.add('selected');
+          }
+        });
+      });
+    });
+
+    // 📬 Handle form submission
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      // Simulate feedback submission
+      modal.classList.remove('hidden');
+      form.reset();
+      stars.forEach(s => s.classList.remove('selected'));
+    });
+
+    function closeModal() {
+      modal.classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

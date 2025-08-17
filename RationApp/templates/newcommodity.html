@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add New Commodity</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Body styling */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f3f9ff, #dceefb); /* Light gradient background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    /* Form container */
+    .form-container {
+      background: #fff;
+      padding: 35px 45px;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      max-width: 650px;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Header styling */
+    h2 {
+      margin-bottom: 25px;
+      text-align: center;
+      color: #2b5876;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    /* Form field styling */
+    label {
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #2b5876;
+      margin-bottom: 8px;
+      display: block;
+      text-align: left;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 12px 14px;
+      margin: 12px 0;
+      font-size: 15px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      transition: 0.3s ease;
+    }
+
+    /* Focus state for inputs */
+    input[type="text"]:focus, input[type="number"]:focus {
+      border-color: #007ae1;
+      box-shadow: 0 0 6px rgba(0, 122, 225, 0.5);
+      outline: none;
+    }
+
+    /* Button styling */
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.2rem;
+      background: #2b5876; /* Primary color for button */
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      font-weight: 600;
+    }
+
+    /* Button hover effects */
+    button:hover {
+      background: #4e4376; /* Darker shade on hover */
+    }
+
+    /* Back link */
+    .back-link {
+      display: inline-block;
+      margin-top: 30px;
+      color: #00bcd4; /* Teal color */
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    /* Change link color to black on hover */
+    .back-link:hover {
+      color: black;
+    }
+
+    /* Global animations */
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Apply animation to form container */
+    .form-container {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>✨ Add New Commodity</h2>
+
+    <form id="addCommodityForm">
+      <label for="name">Commodity Name</label>
+      <input type="text" id="name" placeholder="e.g., Rice, Wheat" required>
+
+      <label for="quantity">Quantity (kg)</label>
+      <input type="number" id="quantity" placeholder="Quantity in kg" required min="1">
+
+      <button type="submit">Add Commodity</button>
+    </form>
+
+    <a href="/addcommodities" class="back-link">← Back to Inventory</a>
+  </div>
+
+  <script>
+    const form = document.getElementById("addCommodityForm");
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+      
+      const name = document.getElementById("name").value.trim();
+      const quantity = parseInt(document.getElementById("quantity").value);
+
+      if (!name || quantity < 1) {
+        alert("Please enter valid commodity details.");
+        return;
+      }
+
+      const res = await fetch('/api/add_commodity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, quantity })
+      });
+
+      if (res.ok) {
+        alert("✅ Commodity added successfully!");
+        window.location.href = "/addcommodities";
+      } else {
+        alert("❌ Failed to add commodity. Try again.");
+      }
+    });
+  </script>
+
+</body>
+</html>
