@@ -53,12 +53,6 @@ AI-RationMitra/
 - **Admin Email:** `admin@gmail.com`  
 - **Password:** `admin123`  
 
-## 📸 Screenshots (Optional)
-_Add screenshots of your app UI here to make it more appealing._  
-
-## 📖 Project Report
-The detailed **project report PDF** is available offline (not included in repo).  
-
 ## 👨‍💻 Authors
 - Moulya M C  
 - Team Members (if any)  
