@@ -47,11 +47,7 @@ AI-RationMitra/
    ```bash
    python main.py
    ```  
-   Visit: [http://127.0.0.1:5000](http://127.0.0.1:5000)  
-
-## 🔑 Default Login
-- **Admin Email:** `admin@gmail.com`  
-- **Password:** `admin123`  
+   Visit: [http://127.0.0.1:5000](http://127.0.0.1:5000)   
 
 ## 👨‍💻 Authors
 - Moulya M C  
